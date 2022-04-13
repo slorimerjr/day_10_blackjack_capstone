@@ -64,6 +64,8 @@ import random
 
 
 deck = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+player_hand = []
+dealer_hand = []
 
 def deal_cards(who):
     who += random.sample(deck, 1)
@@ -79,33 +81,36 @@ def game_status(player_total, dealer_total):
         print(f"You win with a scoare of {player_total} vs the dealer's {dealer_total}. Congratulations, you win!")
     else:
         print(f"Your score: {player_total}, Dealer's score: {dealer_total}. You lose.")
-    
-    
+
+def total_score(hand):
+    x = 0
+    for cards in hand:
+        x += cards
+    return x
+
 def blackjack():
     should_continue = True
-    play_blackjack = input("Do you want to play a game of blackjack? Type 'y' or 'n': ")
-    print(logo)
-    if play_blackjack == "n":
-        should_continue = False
+    if input("Do you want to play a game of blackjack? Type 'y' or 'n': ") == "y":
+      print(logo)
     while should_continue == True:
       player_hand = random.sample(deck, 2)
       dealer_hand = random.sample(deck, 2)
-      player_total = player_hand[0] + player_hand[1]
-      dealer_total = dealer_hand[0] + dealer_hand[1]
+      player_total = total_score(player_hand)
+      dealer_total = total_score(dealer_hand)
       print(f"Your cards: {player_hand}, current score: {player_total}")
       print(f"Dealer's first card: {dealer_hand[0]}")
       hit = input("Type 'y' to hit, type 'n' to stay: ").lower()
       if hit == "y":
           deal_cards(player_hand)
+          player_total = total_score(player_hand)
           print(f"Your cards: {player_hand}, current score: {player_total}")
+          hit
+      elif dealer_total <= 17:
+        deal_cards(dealer_hand)
+        print(f"Dealer's hand: {dealer_hand}, dealer's score: {dealer_total}")
       else:
-          while dealer_total <= 17:
-              dealer_hand += random.sample(deck, 1)
-          print(f"Dealer's hand: {dealer_hand}, dealer's score: {dealer_total}")
-      game_status(player_total, dealer_total)
-          
-          
-        
+            game_status(player_total, dealer_total)
+    should_continue = False
 
 blackjack()
     
